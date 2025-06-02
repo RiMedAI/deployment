@@ -149,9 +149,9 @@ if submit:
         # loading ...
         with st.spinner("Sedang memproses prediksi..."):
             # Load 3 model ML
-            model_stroke = joblib.load('export-model/stroke_rf_bayes_model_smote.pkl')
-            model_jantung = joblib.load('export-model/lr_jantung_smoteenn.pkl')
-            model_diabetes = joblib.load('export-model/Deteksi_diabetes_NN2.pkl')
+            model_stroke = joblib.load('https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/stroke_rf_bayes_model_smote.pkl')
+            model_jantung = joblib.load('https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/lr_jantung_smoteenn.pkl')
+            model_diabetes = joblib.load('https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/Deteksi_diabetes_NN2.pkl')
 
             # Prediksi
             prediksi_stroke = model_stroke.predict(df_stroke)
