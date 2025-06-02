@@ -1,8 +1,9 @@
-import streamlit as st
-import pandas as pd
-import joblib
-import urllib.request
+import urllib.request as urlib
 from io import BytesIO
+
+import joblib
+import pandas as pd
+import streamlit as st
 
 # Url model penyakit
 URL_MODEL_STROKE = 'https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/stroke_rf_bayes_model_smote.pkl'
@@ -16,7 +17,6 @@ KOLOM_DIABETES = ["Age", "HighChol", "BMI", "GenHlth", "DiffWalk", "HighBP"]
 
 # List nama penyakit yang diprediksi model
 PENYAKIT = ["Stroke", "Jantung", "Diabetes"]
-
 
 # ==================================
 # USER INTERFACE [UI] ISIAN FORMULIR
@@ -193,11 +193,14 @@ if submit:
             # ===============
             # LOAD 3 MODEL ML
             # ===============
-            response_stroke = urllib.request.urlopen(URL_MODEL_STROKE)
+            # Mengunduh file model stroke dari URL menggunakan urllib
+            response_stroke = urlib.urlopen(URL_MODEL_STROKE)
+            response_jantung = urlib.urlopen(URL_MODEL_JANTUNG)
+            response_diabetes = urlib.urlopen(URL_MODEL_DIABETES)
+            
+            # Membaca isi file model dan memuatnya ke dalam masing-masing variabel
             model_stroke = joblib.load(BytesIO(response_stroke.read()))
-            response_jantung = urllib.request.urlopen(URL_MODEL_JANTUNG)
             model_jantung = joblib.load(BytesIO(response_jantung.read()))
-            response_diabetes = urllib.request.urlopen(URL_MODEL_DIABETES)
             model_diabetes = joblib.load(BytesIO(response_diabetes.read()))
 
             # ========
