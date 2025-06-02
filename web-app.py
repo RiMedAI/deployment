@@ -5,6 +5,11 @@ import joblib
 import pandas as pd
 import streamlit as st
 
+# Url model penyakit
+URL_MODEL_STROKE = 'https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/stroke_rf_bayes_model_smote.pkl'
+URL_MODEL_JANTUNG = 'https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/lr_jantung_smoteenn.pkl'
+URL_MODEL_DIABETES = 'https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/Deteksi_diabetes_NN.pkl'
+
 # List nama fitur yang digunakan untuk melatih model
 KOLOM_STROKE = ["Age", "Gender", "SES", "Hypertension", "Heart_Disease", "BMI", "Avg_Glucose", "Diabetes", "Smoking_Status"]
 KOLOM_JANTUNG = ["GenHlth", "HighBP", "Age", "Diabetes", "HighChol", "Smoker", "Sex", "AnyHealthcare"]
@@ -12,14 +17,6 @@ KOLOM_DIABETES = ["Age", "HighChol", "BMI", "GenHlth", "DiffWalk", "HighBP"]
 
 # List nama penyakit yang diprediksi model
 PENYAKIT = ["Stroke", "Jantung", "Diabetes"]
-
-# Daftar URL model
-model_urls = {
-    "stroke": "https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/stroke_rf_bayes_model_smote.pkl",
-    "jantung": "https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/lr_jantung_smoteenn.pkl",
-    "diabetes": "https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/Deteksi_diabetes_NN.pkl"
-}
-
 
 # ==================================
 # USER INTERFACE [UI] ISIAN FORMULIR
@@ -193,19 +190,22 @@ if submit:
         # Kalau formulir sudah terisi semua, lanjut ke prediksi
         # loading ...
         with st.spinner("Sedang memproses prediksi..."):
-            # Load 3 model M
-            # Load semua model dalam satu dictionary
-            models = {}
-            for key, url in model_urls.items():
-                with urlib.urlopen(url) as response:
-                    models[key] = joblib.load(BytesIO(response.read()))
+            # ===============
+            # LOAD 3 MODEL ML
+            # ===============
+            # Mengunduh file model stroke dari URL menggunakan urllib
+            response_stroke = urlib.urlopen(URL_MODEL_STROKE)
+            response_jantung = urlib.urlopen(URL_MODEL_JANTUNG)
+            response_diabetes = urlib.urlopen(URL_MODEL_DIABETES)
             
-            # Akses model
-            model_stroke = models["stroke"]
-            model_jantung = models["jantung"]
-            model_diabetes = models["diabetes"]
+            # Membaca isi file model dan memuatnya ke dalam masing-masing variabel
+            model_stroke = joblib.load(BytesIO(response_stroke.read()))
+            model_jantung = joblib.load(BytesIO(response_jantung.read()))
+            model_diabetes = joblib.load(BytesIO(response_diabetes.read()))
 
-            # Prediksi
+            # ========
+            # PREDIKSI
+            # ========
             prediksi_stroke = model_stroke.predict(df_stroke)
             persentase_risiko_stroke = model_stroke.predict_proba(df_stroke)[0][1] * 100
             prediksi_jantung = model_jantung.predict(df_jantung)
