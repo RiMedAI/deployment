@@ -1,6 +1,13 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import urllib.request
+from io import BytesIO
+
+# Url model penyakit
+URL_MODEL_STROKE = 'https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/stroke_rf_bayes_model_smote.pkl'
+URL_MODEL_JANTUNG = 'https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/lr_jantung_smoteenn.pkl'
+URL_MODEL_DIABETES = 'https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/Deteksi_diabetes_NN.pkl'
 
 # List nama fitur yang digunakan untuk melatih model
 KOLOM_STROKE = ["Age", "Gender", "SES", "Hypertension", "Heart_Disease", "BMI", "Avg_Glucose", "Diabetes", "Smoking_Status"]
@@ -183,12 +190,19 @@ if submit:
         # Kalau formulir sudah terisi semua, lanjut ke prediksi
         # loading ...
         with st.spinner("Sedang memproses prediksi..."):
-            # Load 3 model ML
-            model_stroke = joblib.load('https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/stroke_rf_bayes_model_smote.pkl')
-            model_jantung = joblib.load('https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/lr_jantung_smoteenn.pkl')
-            model_diabetes = joblib.load('https://raw.githubusercontent.com/RiMedAI/laskarai-capstone/refs/heads/main/export-model/Deteksi_diabetes_NN.pkl')
+            # ===============
+            # LOAD 3 MODEL ML
+            # ===============
+            response_stroke = urllib.request.urlopen(URL_MODEL_STROKE)
+            model_stroke = joblib.load(BytesIO(response_stroke.read()))
+            response_jantung = urllib.request.urlopen(URL_MODEL_JANTUNG)
+            model_jantung = joblib.load(BytesIO(response_jantung.read()))
+            response_diabetes = urllib.request.urlopen(URL_MODEL_DIABETES)
+            model_diabetes = joblib.load(BytesIO(response_diabetes.read()))
 
-            # Prediksi
+            # ========
+            # PREDIKSI
+            # ========
             prediksi_stroke = model_stroke.predict(df_stroke)
             persentase_risiko_stroke = model_stroke.predict_proba(df_stroke)[0][1] * 100
             prediksi_jantung = model_jantung.predict(df_jantung)
