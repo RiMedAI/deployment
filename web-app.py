@@ -149,7 +149,7 @@ age_bin = bin_age(age)
 # Simpan data input dari user ke dalam DataFrame
 df_stroke = pd.DataFrame([[age, gender_encoded, ses_encoded, high_bp_encoded, heart_disease_encoded, bmi, avg_glucose, diabetes_encoded, smoking_status_encoded]], columns=KOLOM_STROKE)
 df_jantung = pd.DataFrame([[general_health_encoded, high_bp_encoded, age_bin, diabetes_encoded, high_chol_encoded, smoker_encoded, gender_encoded, any_healthcare_encoded]], columns=KOLOM_JANTUNG)
-df_diabetes = pd.DataFrame([[age, high_chol_encoded, bmi, general_health_encoded, difficulty_walk_encoded, high_bp_encoded]], columns=KOLOM_DIABETES)
+df_diabetes = pd.DataFrame([[age_bin, high_chol_encoded, bmi, general_health_encoded, difficulty_walk_encoded, high_bp_encoded]], columns=KOLOM_DIABETES)
 
 
 # ==========================================================
